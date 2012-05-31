@@ -1,5 +1,5 @@
 %h2 
   Posts
-  = render :partial => 'create_post'
+  = render :partial => 'create_post' if show_create_post
 .posts
   = render :partial => 'post', :collection => posts
