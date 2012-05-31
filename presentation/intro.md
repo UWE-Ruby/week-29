@@ -1,4 +1,3 @@
-!SLIDE 
-# Offline Job Processing
+!SLIDE
 
-Using Redis and Resque
+# Serving up an API

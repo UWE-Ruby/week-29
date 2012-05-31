@@ -4,25 +4,13 @@
 
 !SLIDE
 
-## Hot Spot
+## Where to Start
 
 ```ruby
 class PostsController < ApplicationController
 
-  # ... other actions
-
-  def create
-    post = Post.create(params[:post],:user => current_user)
-
-    if post.twitter
-      current_user.twitter.update post.message
-    end
-
-    if post.facebook
-      current_user.facebook.put_wall_post post.message
-    end
-
-    redirect_to user_posts_path(current_user)
+  def index
+    render :locals => { :posts => posts, :show_create_post => user_is_current_user? }
   end
 
 end
@@ -30,81 +18,51 @@ end
 
 !SLIDE
 
-## A Resque Job
+## [respond_to](http://guides.rubyonrails.org/action_controller_overview.html#rendering-xml-and-json-data)
 
 ```ruby
-class Poster
-  @queue = :poster
-
-  def self.perform(options = {})
-    # do work
-  end
-
+def index
+  respond_to do |format|
+    format.html
+    format.xml  { render :xml => posts }
+    format.json { render :json => posts }
   end
 end
 ```
 
 !SLIDE
 
-## Enqueuing a Job
+## Missing Template
 
-```ruby
-Resque.enqueue(Poster,:post_id => post.id)
+```html
+Template is missing
+
+Missing template posts/index, application/index with {:locale=>[:en], :formats=>[:json], :handlers=>[:erb, :builder, :coffee, :haml]}. Searched in: * "/Volumes/Glacier/git/uw-ruby/week-29/app/views" * "/Users/burtlo/.rvm/gems/ruby-1.9.2-p320@uw-ruby/gems/devise-2.1.0.rc2/app/views"
 ```
 
 !SLIDE
 
+## Manual Templating
+
 ```ruby
-class PostsController < ApplicationController
+# within index.json.erb
 
-  # ... other actions
+[<%- posts.each do |post| >
+{ "user" : "<%= post.user.name %>"}
+<% end %>]
 
-  def create
-    post = Post.create(params[:post],:user => current_user)
-    Resque.enqueue(Poster,:post_id => post.id)
-    redirect_to user_posts_path(current_user)
-  end
+```
 
+
+!SLIDE 
+
+## [JBuilder](https://github.com/rails/jbuilder)
+
+```ruby
+# within index.json.jbuilder
+
+json.array!(posts) do |json, post|
+  json.user post.user.name
+  # ...
 end
-```
-
-!SLIDE
-
-```bash
-$ brew install redis
-```
-
-!SLIDE commandline incremental
-
-## Starting Redis (in another terminal)
-
-```bash
-$ redis-server /usr/local/etc/redis.conf
-[28074] 24 May 14:13:38 * Server started, Redis version 2.4.13
-[28074] 24 May 14:13:38 * DB loaded from disk: 0 seconds
-[28074] 24 May 14:13:38 * The server is now ready to accept connections on port 6379
-[28074] 24 May 14:13:39 - DB 0: 2 keys (0 volatile) in 4 slots HT.
-[28074] 24 May 14:13:39 - 0 clients connected (0 slaves), 950016 bytes in use
-```
-
-!SLIDE
-
-## Starting a Worker (in another terminal)
-
-```bash
-$ rake resque:work QUEUE='*'
-```
-
-!SLIDE center
-
-## http://localhost:3000/resque
-
-![Resque](resque.png)
-
-!SLIDE
-
-## Testing Redis/Resque Setup
-
-```bash
-bundle exec rake post
 ```

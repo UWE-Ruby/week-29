@@ -1,10 +1,10 @@
 !SLIDE countdown bullets
 
-### Offline Job Processing
+### Create an API
 
-* Create one or more Resque Jobs
-* Enqueue a post job
-* Echo a post to a service
+* Install and Run the Rails Application
+* Create some posts as a User
+* Create a template for the data
 
 <div id="countdown_dashboard2" style="margin-left: 372px; width: 350px; height:150px;">
   

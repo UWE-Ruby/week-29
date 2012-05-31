@@ -2,7 +2,7 @@
 
 # Exercise
 
-Move the service specific code to echo posts to an offline job.
+Create a JSON representation of a User's Post data.
 
 !SLIDE quote
 
@@ -12,6 +12,6 @@ Select a partner
 
 Install and Run the Rails Application
 
-Create a Resque Job
+Create some posts as a User
 
-Echo a post to a service
+Create a template for the data
