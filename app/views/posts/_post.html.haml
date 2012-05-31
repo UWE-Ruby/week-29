@@ -1,6 +1,6 @@
 .post
   .user
-    = post.user.name 
+    = post.user.name if post.user
     said ...
   .message
     = post.message
