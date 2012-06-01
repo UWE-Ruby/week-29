@@ -37,3 +37,5 @@ gem 'resque', :require => 'resque/server'
 group :presenter do
   gem 'showoff', :git => 'git@github.com:burtlo/showoff.git'
 end
+
+gem "jbuilder"
